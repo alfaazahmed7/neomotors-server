@@ -25,6 +25,7 @@ async function run() {
 
         const db = client.db('neomotors');
         const carCollection = db.collection('cars');
+        const bookingCollection = db.collection('booking');
 
         app.get('/cars', async (req, res) => {
             const result = await carCollection.find().toArray();
@@ -36,6 +37,18 @@ async function run() {
             const result = await carCollection.findOne({
                 _id: new ObjectId(id),
             });
+            res.json(result);
+        });
+
+        app.post('/booking', async (req, res) => {
+            const bookingData = req.body;
+            const result = await bookingCollection.insertOne(bookingData);
+            res.json(result);
+        });
+
+        app.get('/booking/:userId', async (req, res) => {
+            const { userId } = req.params;
+            const result = await bookingCollection.find({ userId: userId }).toArray();
             res.json(result);
         });
 
