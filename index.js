@@ -91,15 +91,27 @@ async function run() {
             res.json(result);
         });
 
-        //search cars
+        //search and filter cars
         app.get('/search', async (req, res) => {
             const search = req.query.search || '';
-            const cars = await carCollection.find({
-                name: {
+            const brand = req.query.brand || '';
+
+            const query = {};
+
+            // SEARCH BY NAME
+            if (search) {
+                query.name = {
                     $regex: search,
                     $options: 'i'
-                }
-            }).toArray();
+                };
+            }
+
+            // FILTER BY BRAND
+            if (brand) {
+                query.brand = brand;
+            }
+
+            const cars = await carCollection.find(query).toArray();
             res.json(cars);
         });
 
