@@ -73,6 +73,16 @@ async function run() {
             res.json(result);
         });
 
+        app.patch('/add-car/:id', async (req, res) => {
+            const { id } = req.params;
+            const updatedCar = req.body;
+            const result = await addCarCollection.updateOne(
+                { _id: new ObjectId(id) },
+                { $set: updatedCar }
+            );
+            res.json(result);
+        });
+
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
